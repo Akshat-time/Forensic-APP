@@ -20,7 +20,8 @@ def detect_voice(payload):
             "language": payload["language"],
             "classification": gemini_result["classification"],
             "confidenceScore": gemini_result["confidenceScore"],
-            "explanation": gemini_result["explanation"]
+            "explanation": gemini_result["explanation"],
+            "debug_features": features, # Exposed for tuning
         }
     
     # 3. Fallback Heuristics (only if API fails)
