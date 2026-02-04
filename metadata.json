@@ -1,0 +1,5 @@
+{
+  "name": "Audio Forensics Explanation Assistant",
+  "description": "A specialized tool for audio forensic analysts to generate concise, factual justifications for audio classifications based on numerical feature analysis.",
+  "requestFramePermissions": []
+}

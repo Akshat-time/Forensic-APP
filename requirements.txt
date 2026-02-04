@@ -1,0 +1,9 @@
+google-generativeai
+fastapi
+uvicorn
+python-multipart
+python-dotenv
+librosa
+numpy
+scipy
+soundfile
