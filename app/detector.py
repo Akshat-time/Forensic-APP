@@ -25,15 +25,30 @@ def detect_voice(payload):
         }
     
     # 3. Fallback Heuristics (only if API fails)
-    score = 0
-    if features["pause_entropy"] < 1.2: score += 25
-    if features["jitter"] < 0.008: score += 25
-    if features["shimmer"] < 0.02: score += 20
-    if features["noise_variance"] < 1e-6: score += 15
-    if features["prosody_drift"] < 0.05: score += 15
+    ai_signals = 0
 
-    classification = "AI_GENERATED" if score >= 50 else "HUMAN"
-    confidence = min(score / 100, 1.0)
+    if features["pause_entropy"] < 0.8:
+        ai_signals += 1
+
+    if features["jitter"] < 0.004:
+        ai_signals += 1
+
+    if features["shimmer"] < 0.015:
+        ai_signals += 1
+
+    if features["noise_variance"] < 5e-7:
+        ai_signals += 1
+
+    if features["prosody_drift"] < 0.03:
+        ai_signals += 1
+
+    # FINAL DECISION
+    if ai_signals >= 3:
+        classification = "AI_GENERATED"
+    else:
+        classification = "HUMAN"
+
+    confidence = ai_signals / 5
     
     return {
         "status": "success",
