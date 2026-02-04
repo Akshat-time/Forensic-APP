@@ -42,6 +42,10 @@ def detect_voice(payload):
     if features["prosody_drift"] < 0.03:
         ai_signals.append("prosody_drift")
 
+    # Strong AI signal: Flat amplitude
+    if features.get("amplitude_variance", 1.0) < 1e-5:
+        ai_signals.append("amplitude_variance")
+
     # FINAL DECISION
     if len(ai_signals) >= 3:
         classification = "AI_GENERATED"

@@ -96,6 +96,9 @@ def extract_features(audio_io):
         if len(silent_samples) > 0:
             noise_variance = np.var(silent_samples)
     
+    # Amplitude Variance: Global amplitude consistency
+    amplitude_variance = np.var(np.abs(y))
+
     # Sanitize inputs (numpy types to python float)
     return {
         "pause_entropy": float(pause_entropy),
@@ -103,6 +106,7 @@ def extract_features(audio_io):
         "shimmer": float(shimmer),
         "noise_variance": float(noise_variance),
         "prosody_drift": float(prosody_drift),
+        "amplitude_variance": float(amplitude_variance),
     }
 
 def _get_fallback_features():
@@ -113,4 +117,5 @@ def _get_fallback_features():
         "shimmer": 0.0,
         "noise_variance": 0.0,
         "prosody_drift": 0.0,
+        "amplitude_variance": 1.0, # Default high to avoid false positive AI
     }
