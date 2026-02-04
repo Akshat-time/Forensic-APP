@@ -72,14 +72,12 @@ Extracted Acoustic Features:
                     time.sleep(wait_time)
                     continue
                 else:
-                    # Log final failure
-                    with open("gemini_debug.log", "a") as f:
-                        f.write(f"GEMINI ERROR BODY (Final): {response.text}\n")
+                    # Log final failure to console
+                    print(f"GEMINI ERROR BODY (Final): {response.text}")
                     raise Exception(f"API returned status {response.status_code} after retries")
 
             if response.status_code != 200:
-                with open("gemini_debug.log", "a") as f:
-                    f.write(f"GEMINI ERROR BODY: {response.text}\n")
+                print(f"GEMINI ERROR BODY: {response.text}")
                 raise Exception(f"API returned status {response.status_code}")
 
             response_data = response.json()
