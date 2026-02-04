@@ -25,33 +25,36 @@ def detect_voice(payload):
         }
     
     # 3. Fallback Heuristics (only if API fails)
-    ai_signals = 0
+    ai_signals = []
 
-    if features["pause_entropy"] < 0.8:
-        ai_signals += 1
+    if features["pause_entropy"] < 0.7:
+        ai_signals.append("pause_entropy")
 
     if features["jitter"] < 0.004:
-        ai_signals += 1
+        ai_signals.append("jitter")
 
     if features["shimmer"] < 0.015:
-        ai_signals += 1
+        ai_signals.append("shimmer")
 
-    if features["noise_variance"] < 5e-7:
-        ai_signals += 1
+    if features["noise_variance"] < 3e-7:
+        ai_signals.append("noise_variance")
 
     if features["prosody_drift"] < 0.03:
-        ai_signals += 1
+        ai_signals.append("prosody_drift")
 
     # FINAL DECISION
-    if ai_signals >= 3:
+    if len(ai_signals) >= 3:
         classification = "AI_GENERATED"
     else:
         classification = "HUMAN"
 
-    confidence = ai_signals / 5
+    confidence = round(len(ai_signals) / 5, 2)
     
+    # Cap confidence to avoid overconfidence
+    confidence = min(confidence, 0.85)
+
     if classification == "HUMAN":
-        explanation = "Natural pitch variation and irregular pauses consistent with human speech."
+        explanation = "Natural speech variations detected with minor acoustic regularities."
     else:
         explanation = "Multiple synthetic speech artifacts detected including pitch stability and uniform pauses."
 
