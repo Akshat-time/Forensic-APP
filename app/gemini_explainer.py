@@ -8,13 +8,26 @@ URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:
 def generate_explanation(features: dict, language: str):
     prompt_text = f"""
 You are an audio forensics expert AI.
-Your task is to analyze acoustic features and simple statistical data to DETECT if an audio clip is likely AI-Generated (Deepfake) or Human.
+Your task is to analyze acoustic features to DETECT if an audio clip is likely AI-Generated or Human.
 
-General Rules of Thumb (but use your judgement):
-- AI voices often have unnaturally low Jitter (< 0.005) and Shimmer (< 0.01).
-- AI voices often have very uniform pause structures (Low Pause Entropy < 1.0).
-- AI voices have extremely low noise floors (Silence Noise Variance near 0).
-- Real human voices have natural irregularities (Higher Jitter/Shimmer, irregular pauses, background noise).
+CRITICAL INSTRUCTION: BIAS TOWARDS "HUMAN".
+Real human voices are diverse. AI voices are "mathematically perfect".
+Unless the audio is **unambiguously** artificial across ALL metrics, classify as **HUMAN**.
+
+Analysis Logic:
+1. **The "Human" Signal**:
+   - If Jitter > 0.005 OR Shimmer > 0.015, it is almost certainly **HUMAN**, even if other metrics are low.
+   - Natural pitch fluctuation (Jitter) is the strongest indicator of a human vocal fold.
+
+2. **Common False Positives (Do NOT classify as AI for these)**:
+   - **Low Noise**: Studio recordings have 0 noise. This is NOT a sign of AI on its own.
+   - **Low Pause Entropy**: Humans reading a script pause regularly. This is NOT a sign of AI on its own.
+
+3. **The "AI" Signal (Deepfake)**:
+   - Classify as AI **ONLY IF**: 
+     - Jitter is Extremely Low (< 0.003) AND 
+     - Shimmer is Low (< 0.01) AND 
+     - Prosody/Pauses are machine-perfect.
 
 Return your analysis in JSON format ONLY:
 {{
