@@ -46,16 +46,17 @@ def detect_voice(payload):
     if features.get("amplitude_variance", 1.0) < 1e-5:
         ai_signals.append("amplitude_variance")
 
+    # Spectral Smoothing (AI Artifact)
+    if features.get("spectral_flatness", 1.0) < 0.015:
+        ai_signals.append("spectral_flatness")
+
     # FINAL DECISION
-    if len(ai_signals) >= 3:
+    if len(ai_signals) >= 2:
         classification = "AI_GENERATED"
     else:
         classification = "HUMAN"
 
-    confidence = round(len(ai_signals) / 5, 2)
-    
-    # Cap confidence to avoid overconfidence
-    confidence = min(confidence, 0.85)
+    confidence = min(round(len(ai_signals) / 3, 2), 0.85)
 
     if classification == "HUMAN":
         explanation = "Natural speech variations detected with minor acoustic regularities."
