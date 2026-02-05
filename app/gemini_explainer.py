@@ -10,24 +10,24 @@ def generate_explanation(features: dict, language: str):
 You are an audio forensics expert AI.
 Your task is to analyze acoustic features to DETECT if an audio clip is likely AI-Generated or Human.
 
-CRITICAL INSTRUCTION: BIAS TOWARDS "HUMAN".
-Real human voices are diverse. AI voices are "mathematically perfect".
-Unless the audio is **unambiguously** artificial across ALL metrics, classify as **HUMAN**.
+CRITICAL INSTRUCTION: BALANCED ANALYSIS.
+Real human voices have imperfections. AI voices are often "too perfect".
 
 Analysis Logic:
 1. **The "Human" Signal**:
-   - If Jitter > 0.005 OR Shimmer > 0.015, it is almost certainly **HUMAN**, even if other metrics are low.
-   - Natural pitch fluctuation (Jitter) is the strongest indicator of a human vocal fold.
+   - High Jitter (> 0.01) is a strong sign of human vocal folds.
+   - Irregular pauses are typical of natural speech.
 
-2. **Common False Positives (Do NOT classify as AI for these)**:
-   - **Low Noise**: Studio recordings have 0 noise. This is NOT a sign of AI on its own.
-   - **Low Pause Entropy**: Humans reading a script pause regularly. This is NOT a sign of AI on its own.
+2. **The "AI" Signal (Deepfake)**:
+   - Classify as **AI_GENERATED** if *multiple* metrics (2 or more) show synthetic perfection:
+     - Jitter is Low (< 0.006)
+     - Shimmer is Low (< 0.02)
+     - Prosody Drift is low (< 0.04)
+     - Amplitude Variance is extremely low/flat (if provided).
 
-3. **The "AI" Signal (Deepfake)**:
-   - Classify as AI **ONLY IF**: 
-     - Jitter is Extremely Low (< 0.003) AND 
-     - Shimmer is Low (< 0.01) AND 
-     - Prosody/Pauses are machine-perfect.
+3. **Nuance (Studio vs Fake)**:
+   - Studio Recording: Low Noise + Normal Jitter = **HUMAN**
+   - Deepfake: Low Noise + Low Jitter = **AI**
 
 Return your analysis in JSON format ONLY:
 {{
