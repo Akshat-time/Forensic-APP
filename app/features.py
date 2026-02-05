@@ -7,8 +7,9 @@ def extract_features(audio_io):
     Extracts acoustic features from an audio stream using Librosa.
     """
     # Load audio (sr=None preserves native sampling rate)
+    # OPTIMIZATION: Limit to first 10 seconds to prevent "Request Timeout" on free CPU instances.
     try:
-        y, sr = librosa.load(audio_io, sr=None)
+        y, sr = librosa.load(audio_io, sr=None, duration=10)
     except Exception as e:
         # Fallback for empty or corrupted audio
         print(f"Error loading audio: {e}")
